@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>HTML5</title>
+  <style>
+    #progress {
+      position: relative;
+      width: 100px;
+      height: 24px;
+      background: #ccc;
+      margin: 10px 0;
+      cursor: pointer;
+    }
+
+    #cur-progress {
+      width: 20%;
+      height: 100%;
+      background: #f00;
+      position: absolute;
+      top: 0;
+      left: 0
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <video id="video" src="./open.mp4" controls height="400" preload="auto">
+      Your browser is not support the video tag!
+    </video>
+    <div class="control">
+      <button id="play" onclick='playPause()'>播放</button>
+      <div id="progress">进度
+        <span id="cur-progress"></span>
+      </div>
+      <button id="voice">音量</button>
+      <button id="screen" onclick="fullScreen()">全屏</button>
+      <button id="down">下载</button>
+    </div>
+  </div>
+  <script>
+    let video = document.getElementById('video')
+    let playing = document.getElementById('play')
+    let progress = document.getElementById('progress')
+    let cur_progress = document.getElementById('cur-progress')
+    let voice = document.getElementById('voice')
+    let screen = document.getElementById('screen')
+    let down = document.getElementById('down')
+
+    //播放暂停
+    function playPause() {
+      if (video.paused) {
+        playing.innerHTML = '暂停'
+        video.play()
+        console.log(video.currentTime)
+        console.log(video.duration)
+      } else {
+        playing.innerHTML = '播放'
+        video.pause()
+      }
+    }
+
+    // 当前进度
+    function curProgress() {
+      let cur = video.currentTime / video.duration;
+      cur_progress.style.width = cur * 100 + '%'
+      if (cur === 1) {
+        clearInterval(timer)
+      }
+    }
+
+    // 修改当前进度
+    progress.onclick = function (e) {
+      var x = event.clientX - this.offsetLeft;
+      let w = x / this.offsetWidth * 100
+      cur_progress.style.width = w + '%'
+      video.currentTime = w / 100 * video.duration
+      curProgress()
+
+      playing.innerHTML = '暂停'
+      video.play()
+    }
+    function changeProgress(event) {
+
+    }
+
+
+    // 实时更新进度
+    let timer = setInterval(function () {
+      curProgress()
+    }, 1000)
+
+    //全屏设置
+    function fullScreen() {
+      // https://www.cnblogs.com/kingwell/p/3706352.html
+      // video.requestFullscreen();
+      video.webkitRequestFullscreen()
+      // document.webkitCancelFullScreen();
+    }
+
+    // 下载
+    // http://blog.csdn.net/songshu92/article/details/76576900
+    console.log(video.currentTime)
+    console.log(video.duration)
+
+  </script>
+</body>
+
+</html>
